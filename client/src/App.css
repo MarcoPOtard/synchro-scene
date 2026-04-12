@@ -226,21 +226,6 @@ sub-acc-alt */
   display: flex;
   flex-direction: column;
 }
-.display-change[class^="acc-"] .scale-chords,
-.display-change[class^="alt-"] .key-signature,
-.display-change[class^="sub-"] .common-tone-substitutions {
-  order: 1;
-}
-.display-change[class*="-acc-"] .scale-chords,
-.display-change[class*="-alt-"] .key-signature,
-.display-change[class*="-sub-"] .common-tone-substitutions {
-  order: 2;
-}
-.display-change[class$="-acc"] .scale-chords,
-.display-change[class$="-alt"] .key-signature,
-.display-change[class$="-sub"] .common-tone-substitutions {
-  order: 3;
-}
 
 /* Section des accords de la gamme */
 .scale-chords {
@@ -402,6 +387,80 @@ sub-acc-alt */
   font-size: 1.6rem;
   color: #2e7d32;
   text-align: center;
+}
+
+/* Section progression harmonique par style */
+.style-progression {
+  margin: 5px 0;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border-radius: 12px;
+  border: 2px solid #ffa000;
+}
+
+.style-progression h3 {
+  margin: 0 0 10px 0;
+  color: #e65100;
+  font-size: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.progression-type-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #ffa000;
+  color: white;
+}
+
+.progression-columns {
+  display: flex;
+  gap: 16px;
+}
+
+.progression-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.progression-column-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #e65100;
+  margin-bottom: 6px;
+}
+
+.progression-content {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  white-space: pre;
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progression-grille {
+  background: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progression-liste {
+  padding: 4px 8px;
 }
 
 /* Section des musiciens */
