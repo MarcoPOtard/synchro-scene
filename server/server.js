@@ -24,10 +24,11 @@ const io = socketIo(server, {
 
 // État partagé entre tous les musiciens
 let sharedState = {
-  tempo: 120,
+  style: 'Pop',
   tonalite: 'C',
-  structure: 'Intro',
+  gamme: 'Majeur',
   notes: '',
+  displayChange: 'acc-alt-sub-gri',
   lastUpdate: null,
   updatedBy: null
 };
