@@ -1,0 +1,14 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000,
+    host: true, // expose sur le réseau local (accès depuis les téléphones des musiciens)
+  },
+  build: {
+    outDir: 'build',
+  },
+});
