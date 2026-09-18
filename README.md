@@ -1,145 +1,50 @@
 # 🎵 Concert Sync - Synchronisation en temps réel pour musiciens
 
-Application de synchronisation en temps réel permettant à plusieurs musiciens de partager des informations pendant un concert (tempo, tonalité, structure, notes) sans connexion Internet.
+Application de synchronisation en temps réel permettant à plusieurs musiciens de partager des informations pendant un concert (tempo, tonalité, structure, notes), même quand chacun n'a que sa propre connexion 4G/5G (pas besoin d'un WiFi commun).
+
+Le serveur est déployé **une seule fois** sur un hébergeur cloud (Render) et tourne en permanence. Il n'y a donc plus rien à installer ni à lancer avant un concert : chaque musicien ouvre simplement une URL (ou scanne un QR code) sur son téléphone/tablette.
 
 ## 📋 Prérequis
 
-- **Node.js** (version 16 ou supérieure) - [Télécharger ici](https://nodejs.org/)
-- Un appareil pour faire serveur (tablette, smartphone, ou Raspberry Pi)
-- Tablettes pour les musiciens (iOS, Android, ou autre)
-- Un réseau WiFi local (ou hotspot)
+- Une connexion Internet sur chaque appareil (4G/5G ou WiFi, peu importe qu'ils soient sur le même réseau)
+- Un navigateur récent (Safari, Chrome, ...) sur chaque appareil des musiciens
+- **Node.js** (version 16+) uniquement si vous développez/testez en local — [Télécharger ici](https://nodejs.org/)
 
 ---
 
-## 🚀 Installation
+## ☁️ Déploiement (une seule fois)
 
-### 1️⃣ Télécharger le projet
+### Sur Render
 
-```bash
-# Cloner ou télécharger ce dossier
-cd concert-sync
-```
+1. Poussez ce repo sur GitHub (déjà fait si vous lisez ceci depuis le dépôt).
+2. Sur [render.com](https://render.com), créez un **New → Web Service** et connectez ce repo. Render détecte le `render.yaml` à la racine et pré-remplit :
+   - **Build Command** : `cd client && npm install && npm run build && cd ../server && npm install`
+   - **Start Command** : `node server/server.js`
+   - **Plan** : Free (suffisant pour commencer — voir la note ci-dessous)
+3. Déployez. Render vous donne une URL fixe du type `https://synchro-scene.onrender.com`.
 
-### 2️⃣ Installer le serveur
+⚠️ **Tier gratuit** : le service se met en veille après ~15 min d'inactivité. La première connexion après une veille peut prendre 20-30 secondes. Pensez à ouvrir l'appli quelques minutes avant de monter sur scène. Si ça devient gênant, passez sur le plan payant Starter (~7$/mois) pour un service toujours actif — aucun changement de code nécessaire.
 
-```bash
-cd server
-npm install
-```
-
-### 3️⃣ Installer le client
-
-```bash
-cd ../client
-npm install
-```
+C'est tout : cette URL ne change plus, vous n'avez plus jamais besoin de relancer un serveur ou de chercher une IP.
 
 ---
 
-## 💻 Configuration
+## 📱 Utilisation en concert
 
-### Trouver l'adresse IP de l'appareil serveur
-
-#### Sur Windows :
-```bash
-ipconfig
-```
-Cherchez "Adresse IPv4" (ex: `192.168.1.100`)
-
-#### Sur Mac :
-```bash
-ifconfig | grep "inet "
-```
-Ou allez dans Préférences Système → Réseau
-
-#### Sur Linux :
-```bash
-ip addr show
-```
-Cherchez l'IP de votre interface WiFi (ex: `192.168.1.100`)
-
-### Configurer le client
-
-1. Copiez `.env.example` vers `.env` dans le dossier `client/` :
-```bash
-cd client
-cp .env.example .env
-```
-
-2. Éditez `.env` et remplacez l'IP :
-```
-REACT_APP_SOCKET_URL=http://192.168.1.100:3001
-```
-⚠️ Remplacez `192.168.1.100` par **votre IP locale réelle**
-
----
-
-## 🎬 Démarrage
-
-### Option A : Mode Développement (pour tester)
-
-**Terminal 1 - Démarrer le serveur :**
-```bash
-cd server
-npm start
-```
-
-**Terminal 2 - Démarrer le client :**
-```bash
-cd client
-npm start
-```
-
-Le client s'ouvrira automatiquement sur `http://localhost:3000`
-
-### Option B : Mode Production (recommandé pour concerts)
-
-**1. Builder le client :**
-```bash
-cd client
-npm run build
-```
-
-**2. Démarrer uniquement le serveur (qui servira aussi le client) :**
-```bash
-cd ../server
-npm start
-```
-
-**3. Accès :**
-- Sur l'appareil serveur : `http://localhost:3001`
-- Sur les autres tablettes : `http://[IP-DU-SERVEUR]:3001`
-  
-Exemple : `http://192.168.1.100:3001`
-
----
-
-## 📱 Utilisation sur les tablettes
-
-### Setup initial
-
-1. **Créer un hotspot WiFi** sur l'appareil serveur OU connecter tous les appareils au même réseau WiFi
-   
-2. **Sur l'appareil serveur** (celui qui fait tourner Node.js) :
-   - Démarrer le serveur : `npm start` dans le dossier `server/`
-   - Noter l'IP affichée dans le terminal
-
-3. **Sur chaque tablette de musicien** :
-   - Ouvrir le navigateur (Safari, Chrome, etc.)
-   - Aller à : `http://[IP-DU-SERVEUR]:3001`
-   - Entrer votre nom (ex: "Marc - Piano")
-   - Cliquer sur "Rejoindre le concert"
+1. Un musicien déjà connecté ouvre le menu **📱 Inviter** dans l'appli (visible sur l'écran de connexion et dans l'en-tête) : ça affiche un QR code qui encode l'URL Render.
+2. Chaque nouveau musicien scanne ce QR code avec l'appareil photo de son téléphone/tablette — ça ouvre directement l'appli dans le navigateur.
+3. Il entre son nom (ex: "Marc - Piano") et clique sur "Rejoindre le concert".
 
 ### Pendant le concert
 
 - **N'importe quel musicien** peut modifier le tempo, la tonalité, la structure ou les notes
-- Les changements sont **instantanément synchronisés** sur toutes les tablettes
+- Les changements sont **instantanément synchronisés** sur tous les appareils
 - Vous voyez qui est connecté dans la section "Musiciens connectés"
 - Vous pouvez envoyer des messages rapides via le chat
 
 ### Ajout à l'écran d'accueil (PWA)
 
-Pour un accès rapide comme une vraie app :
+Pour un accès rapide comme une vraie app, sans repasser par le QR code à chaque fois :
 
 **Sur iOS (Safari) :**
 1. Appuyez sur le bouton "Partager" 
@@ -149,6 +54,36 @@ Pour un accès rapide comme une vraie app :
 **Sur Android (Chrome) :**
 1. Menu (⋮) → "Ajouter à l'écran d'accueil"
 2. Confirmez
+
+---
+
+## 🧪 Développement local
+
+Pour tester en local avant de déployer :
+
+**1. Installer les dépendances :**
+```bash
+cd server && npm install
+cd ../client && npm install
+```
+
+**2. Configurer le client** (uniquement en dev — inutile en production, le client se connecte automatiquement au serveur qui le sert) :
+```bash
+cd client
+cp .env.example .env
+```
+`.env` pointe par défaut vers `http://localhost:3001`.
+
+**3. Lancer les deux (deux terminaux) :**
+```bash
+# Terminal 1
+cd server && npm start
+
+# Terminal 2
+cd client && npm run dev
+```
+
+Le client s'ouvre sur `http://localhost:3000`.
 
 ---
 
@@ -202,69 +137,28 @@ const [state, setState] = useState({
 
 ## 🔧 Dépannage
 
-### Le serveur ne démarre pas
-- Vérifiez que Node.js est bien installé : `node --version`
-- Vérifiez que le port 3001 n'est pas déjà utilisé
-- Relancez `npm install` dans le dossier `server/`
+### Le service Render ne répond pas / met du temps
+- Sur le plan Free, un service inactif ~15 min se met en veille : la 1ère requête le réveille (20-30s). Ouvrez l'appli quelques minutes avant le concert.
+- Vérifiez le statut et les logs du service dans le dashboard Render.
 
-### Les tablettes ne se connectent pas
-- Vérifiez que tous les appareils sont sur le **même réseau WiFi**
-- Vérifiez l'adresse IP dans le `.env` du client
-- Vérifiez que le firewall ne bloque pas le port 3001
-- Sur l'appareil serveur, testez d'abord `http://localhost:3001` pour voir si ça marche localement
+### Une tablette n'arrive pas à se connecter
+- Vérifiez qu'elle a bien une connexion Internet (4G/5G ou WiFi) active.
+- Vérifiez que l'URL scannée/ouverte est bien la bonne (celle donnée par Render).
+- Ouvrez la console du navigateur (F12 ou outils développeur mobile) pour voir les erreurs.
 
 ### La synchronisation ne fonctionne pas
-- Ouvrez la console du navigateur (F12) pour voir les erreurs
-- Vérifiez que le serveur est bien démarré
-- Rechargez la page sur les tablettes
+- Rechargez la page.
+- Vérifiez dans le dashboard Render que le service est bien "Live" (pas en train de redémarrer).
 
 ### Latence importante
-- Vérifiez la qualité du signal WiFi
-- Réduisez la distance entre les appareils et le routeur/hotspot
-- Limitez le nombre d'appareils connectés au réseau
-
----
-
-## 📦 Déploiement sur appareil dédié
-
-### Sur Raspberry Pi
-
-1. **Installer Node.js** :
-```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
-
-2. **Copier les fichiers** du projet sur le Pi
-
-3. **Installer et démarrer** :
-```bash
-cd concert-sync/server
-npm install
-npm start
-```
-
-4. **Démarrage automatique** (optionnel) :
-Créer un service systemd pour que ça démarre au boot du Pi.
-
-### Sur tablette Android (Termux)
-
-1. Installer Termux depuis F-Droid
-2. Dans Termux :
-```bash
-pkg install nodejs
-cd /sdcard
-# Copier les fichiers du projet ici
-cd concert-sync/server
-npm install
-npm start
-```
+- La latence dépend de la qualité du réseau mobile de chaque musicien plutôt que d'un WiFi local — un signal 4G/5G faible sur un appareil ralentit sa propre synchronisation.
 
 ---
 
 ## 🎯 Fonctionnalités
 
-✅ Synchronisation en temps réel sans Internet  
+✅ Synchronisation en temps réel entre musiciens, chacun sur sa propre connexion (4G/5G ou WiFi)  
+✅ Rejoindre en scannant un QR code, sans IP à chercher ni serveur à lancer  
 ✅ Interface tactile optimisée pour tablettes  
 ✅ Tempo, tonalité, structure de morceau  
 ✅ Notes partagées entre musiciens  

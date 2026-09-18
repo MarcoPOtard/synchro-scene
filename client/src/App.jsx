@@ -3,6 +3,7 @@ import './App.css';
 
 import { useSocket } from './hooks/useSocket';
 import RegisterScreen from './components/RegisterScreen';
+import InviteQR from './components/InviteQR';
 import ScaleChords from './components/ScaleChords';
 import KeySignature from './components/KeySignature';
 import CommonToneSubstitutions from './components/CommonToneSubstitutions';
@@ -71,6 +72,7 @@ function App() {
           <option value="gri-sub-alt-acc">Grille — Substitutions — Altérations — Accords</option>
         </select>
         <div className="header-info">
+          <InviteQR />
           <span className="musician-name">👤 {musicianName}</span>
           <span className={`connection-indicator ${connected ? 'connected' : 'disconnected'}`}>
             {connected ? '🟢' : '🔴'}

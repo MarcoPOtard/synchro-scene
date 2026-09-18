@@ -1,4 +1,5 @@
 import React from 'react';
+import InviteQR from './InviteQR';
 
 const RegisterScreen = ({ connected, musicianName, setMusicianName, handleRegister }) => (
   <div className="App">
@@ -20,6 +21,7 @@ const RegisterScreen = ({ connected, musicianName, setMusicianName, handleRegist
           Rejoindre le concert
         </button>
       </form>
+      <InviteQR />
     </div>
   </div>
 );

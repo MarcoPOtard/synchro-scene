@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ||
-  `http://${window.location.hostname}:3001`;
+// En dev, VITE_SOCKET_URL pointe vers le serveur local (ex: http://localhost:3001).
+// En production, le client est servi par le même serveur que l'API : pas d'URL
+// explicite nécessaire, socket.io-client se connecte alors à l'origine courante.
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || undefined;
 
 const INITIAL_STATE = {
   style: 'Pop',
