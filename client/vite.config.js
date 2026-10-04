@@ -7,6 +7,14 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true, // expose sur le réseau local (accès depuis les téléphones des musiciens)
+    // En dev, redirige le socket vers le serveur local : même comportement qu'en
+    // production (client et socket sur la même origine), sans variable d'env.
+    proxy: {
+      '/socket.io': {
+        target: 'http://localhost:3001',
+        ws: true,
+      },
+    },
   },
   build: {
     outDir: 'build',

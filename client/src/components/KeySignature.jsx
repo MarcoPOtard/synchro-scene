@@ -1,7 +1,22 @@
 import React from 'react';
-import { getKeySignature } from '../utils/musicTheory';
+import { getKeySignature, getNoteArrays, getScaleNotes, isDiatonic } from '../utils/musicTheory';
 
 const KeySignature = ({ tonalite, gamme, style }) => {
+  // Gammes non diatoniques : pas d'armure, on affiche directement les notes de la gamme
+  if (!isDiatonic(gamme)) {
+    const { notesFr } = getNoteArrays(tonalite, gamme);
+    return (
+      <div className="key-signature" style={style}>
+        <h3>Notes de la gamme</h3>
+        <div className="alteration-notes">
+          {getScaleNotes(tonalite, gamme).map((noteIndex, i) => (
+            <span key={i} className="alteration-note">{notesFr[noteIndex]}</span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const sig = getKeySignature(tonalite, gamme);
   const symbol = sig.type === '#' ? '♯' : '♭';
 

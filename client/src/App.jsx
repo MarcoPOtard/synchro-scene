@@ -110,6 +110,9 @@ function App() {
                 <option value="mineur naturelle">mineur naturelle</option>
                 <option value="mineur harmonique">mineur harmonique</option>
                 <option value="mineur mélodique">mineur mélodique</option>
+                <option value="Japonaise Hirajōshi">Japonaise Hirajōshi</option>
+                <option value="Chinoise">Chinoise</option>
+                <option value="Orientale">Orientale</option>
               </select>
             </label>
 

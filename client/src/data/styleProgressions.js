@@ -113,7 +113,7 @@ export const replaceDegreesWithChords = (content, tonalite, gamme) => {
     /(VII|VI|IV|V|III|II|I|vii|vi|iv|v|iii|ii|i)[°+m]?/g,
     (match, numeral) => {
       const index = NUMERAL_TO_INDEX[numeral];
-      return index !== undefined ? (scaleChords[index]?.chord ?? match) : match;
+      return scaleChords.find((c) => c.degreeIndex === index)?.chord ?? match;
     }
   );
 };

@@ -12,9 +12,21 @@ export const SCALE_INTERVALS = {
   'mineur naturelle':   [0, 2, 3, 5, 7, 8, 10],
   'mineur harmonique':  [0, 2, 3, 5, 7, 8, 11],
   'mineur mélodique':   [0, 2, 3, 5, 7, 9, 11],
+  'Japonaise Hirajōshi': [0, 2, 3, 7, 8],            // T ½ 2T ½ 2T
+  'Chinoise':            [0, 2, 4, 7, 9],            // T T 1½ T 1½
+  'Orientale':           [0, 1, 4, 5, 7, 8, 11],     // ½ 1½ ½ T ½ 1½ ½
 };
 
-// Qualités des accords pour chaque degré
+// Gammes non diatoniques : pas d'armure propre. On emprunte celle d'une gamme de
+// référence uniquement pour choisir entre dièses et bémols dans le nom des notes.
+export const SCALE_NAMING_REFERENCE = {
+  'Japonaise Hirajōshi': 'mineur naturelle',
+  'Chinoise':            'Majeur',
+  'Orientale':           'mineur naturelle',
+};
+
+// Qualités des accords pour chaque degré (gammes diatoniques).
+// Pour les autres gammes, les qualités sont calculées (voir getScaleQualities).
 export const CHORD_QUALITIES = {
   'Majeur':             ['', 'm', 'm', '', '', 'm', 'dim'],
   'mineur naturelle':   ['m', 'dim', '', 'm', 'm', '', ''],
@@ -34,7 +46,12 @@ export const CHORD_INTERVALS = {
   'm':   [0, 3, 7],  // mineur
   'dim': [0, 3, 6],  // diminué
   'aug': [0, 4, 8],  // augmenté
+  'sus4': [0, 5, 7], // suspendu 4
+  'sus2': [0, 2, 7], // suspendu 2
 };
+
+// Ordre de préférence des accords cherchés sur chaque degré d'une gamme non diatonique
+export const COMPUTED_CHORD_QUALITIES = ['', 'm', 'sus4', 'sus2', 'dim', 'aug'];
 
 // Altérations à la clé selon la tonalité et la gamme
 // Les trois variantes mineures partagent la même armure (le mineur naturel)

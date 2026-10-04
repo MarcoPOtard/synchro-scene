@@ -10,7 +10,9 @@ const ScaleChords = ({ tonalite, gamme, style }) => (
           <span className="chord-degree">{item.degree}</span>
           <div className="chord-full-name">
             <span className="chord-name">{item.chord}</span>
-            <span className="chord-name-en">({item.chordFr})</span>
+            <span className="chord-name-en">
+              ({item.chordFr}{item.quality === null ? ' — note seule' : ''})
+            </span>
           </div>
         </div>
       ))}
