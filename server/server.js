@@ -28,10 +28,12 @@ let sharedState = {
   tonalite: 'C',
   gamme: 'Majeur',
   notes: '',
-  displayChange: 'acc-alt-sub-gri',
   lastUpdate: null,
   updatedBy: null
 };
+
+// Champs que les clients ont le droit de modifier
+const SHARED_KEYS = ['style', 'tonalite', 'gamme', 'notes'];
 
 // Stockage des musiciens connectés
 let connectedMusicians = new Map();
@@ -61,16 +63,22 @@ io.on('connection', (socket) => {
   // Réception d'une mise à jour d'état
   socket.on('update-state', (data) => {
     const musician = connectedMusicians.get(socket.id);
-    
+
+    // Ne garder que les champs synchronisés entre musiciens
+    const allowed = Object.fromEntries(
+      Object.entries(data || {}).filter(([key]) => SHARED_KEYS.includes(key))
+    );
+    if (Object.keys(allowed).length === 0) return;
+
     // Mettre à jour l'état partagé
     sharedState = {
       ...sharedState,
-      ...data,
+      ...allowed,
       lastUpdate: new Date().toISOString(),
       updatedBy: musician ? musician.name : 'Inconnu'
     };
-    
-    console.log(`📡 Mise à jour de ${sharedState.updatedBy}:`, data);
+
+    console.log(`📡 Mise à jour de ${sharedState.updatedBy}:`, allowed);
     
     // Broadcaster la mise à jour à tous les clients (sauf l'émetteur)
     socket.broadcast.emit('state-updated', sharedState);
