@@ -13,7 +13,6 @@ const INITIAL_STATE = {
   notes: '',
   lastUpdate: null,
   updatedBy: null,
-  displayChange: 'acc-alt-sub-gri',
 };
 
 export const useSocket = () => {

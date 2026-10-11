@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import { useSocket } from './hooks/useSocket';
@@ -25,6 +25,16 @@ function App() {
     sendMessage,
   } = useSocket();
 
+  // Organisation des blocs : propre à chaque utilisateur, non synchronisée
+  const [displayChange, setDisplayChange] = useState(
+    () => localStorage.getItem('displayChange') || 'acc-alt-sub-gri'
+  );
+
+  const handleDisplayChange = (value) => {
+    setDisplayChange(value);
+    localStorage.setItem('displayChange', value);
+  };
+
   if (!registered) {
     return (
       <RegisterScreen
@@ -43,8 +53,8 @@ function App() {
         <select
           className="app-header__display-change"
           name="display-change"
-          value={state.displayChange}
-          onChange={(e) => updateState('displayChange', e.target.value)}
+          value={displayChange}
+          onChange={(e) => handleDisplayChange(e.target.value)}
         >
           <option value="acc-alt-sub-gri">Accords — Altérations — Substitutions — Grille</option>
           <option value="acc-alt-gri-sub">Accords — Altérations — Grille — Substitutions</option>
@@ -152,7 +162,7 @@ function App() {
 
           {(() => {
             const order = Object.fromEntries(
-              state.displayChange.split('-').map((key, idx) => [key, idx + 1])
+              displayChange.split('-').map((key, idx) => [key, idx + 1])
             );
             return (
               <div className="display-change">
