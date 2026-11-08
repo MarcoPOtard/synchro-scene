@@ -1,8 +1,34 @@
-import { getScaleChords } from '../utils/musicTheory';
+import { getScaleChords, getNoteArrays } from '../utils/musicTheory';
+import { NOTES, SCALE_INTERVALS } from '../constants/musicTheory';
 
 // type : 'grille' | 'liste'
 // content : texte libre avec retours à la ligne et caractères spéciaux (|, –, ♩, etc.)
+// degresFixes : la progression ne dépend pas de la gamme choisie, seulement de la tonalité.
+//   Chaque degré porte sa propre qualité : majuscule = majeur, minuscule = mineur,
+//   ° = diminué, + = augmenté ; ♭ / ♯ altère le degré par rapport à la gamme majeure.
+// armure : gamme de référence pour nommer les notes (dièses ou bémols) en mode degresFixes.
 export const STYLE_PROGRESSIONS = {
+  'Balade Pop': {
+    type: 'grille',
+    degresFixes: true,
+    armure: 'mineur naturelle',
+    content:
+`|i   |♭III –   |♭VII –   |IV   |`,
+  },
+  'Swing Manouche': {
+    type: 'grille',
+    degresFixes: true,
+    armure: 'mineur naturelle',
+    content:
+`| i   | ♭VI | II  | V   |`,
+  },
+  'Médiéval': {
+    type: '',
+    degresFixes: true,
+    armure: 'majeur',
+    info: 'Basse fondamentale quinte',
+    content:'',
+  },
 //   'Balade': {
 //     type: 'liste',
 //     content:
@@ -17,6 +43,13 @@ export const STYLE_PROGRESSIONS = {
 | IV  | IV  | I   | I   |
 | V   | IV  | I   | V   |`,
   },
+  'New Varietoche': {
+    type: 'grille',
+    info: 'si Mineur alors Mineur Naturel',
+    content:
+`| I   | VI  | III   | III   |`,
+  },
+  
 //   'Electro': {
 //     type: 'liste',
 //     content:
@@ -114,6 +147,29 @@ export const replaceDegreesWithChords = (content, tonalite, gamme) => {
     (match, numeral) => {
       const index = NUMERAL_TO_INDEX[numeral];
       return scaleChords.find((c) => c.degreeIndex === index)?.chord ?? match;
+    }
+  );
+};
+
+// Convertit une progression à degrés fixes en accords, d'après la seule tonalité.
+// La qualité de chaque accord est portée par le chiffre romain lui-même.
+const ROMAN_TO_INDEX = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+const ACCIDENTAL_OFFSET = { '♭': -1, 'b': -1, '♯': 1, '#': 1 };
+
+export const replaceFixedDegreesWithChords = (content, tonalite, armure = 'Majeur') => {
+  const rootIndex = NOTES.indexOf(tonalite);
+  if (rootIndex === -1) return content;
+  const { notes: noteNames } = getNoteArrays(tonalite, armure);
+
+  return content.replace(
+    /([♭♯b#]?)(VII|VI|IV|V|III|II|I|vii|vi|iv|v|iii|ii|i)([°+]?)/g,
+    (match, accidental, numeral, suffix) => {
+      const interval = SCALE_INTERVALS['Majeur'][ROMAN_TO_INDEX[numeral.toUpperCase()]]
+        + (ACCIDENTAL_OFFSET[accidental] ?? 0);
+      const noteIndex = (rootIndex + interval + 12) % 12;
+      const isMinor = numeral === numeral.toLowerCase();
+      const quality = suffix === '°' ? 'dim' : suffix === '+' ? 'aug' : isMinor ? 'm' : '';
+      return noteNames[noteIndex] + quality;
     }
   );
 };

@@ -10,6 +10,7 @@ import CommonToneSubstitutions from './components/CommonToneSubstitutions';
 import StyleProgression from './components/StyleProgression';
 import MusiciansList from './components/MusiciansList';
 import Chat from './components/Chat';
+import { STYLE_PROGRESSIONS } from './data/styleProgressions';
 
 function App() {
   const {
@@ -34,6 +35,9 @@ function App() {
     setDisplayChange(value);
     localStorage.setItem('displayChange', value);
   };
+
+  // Certains styles imposent leurs propres degrés : la gamme n'a alors pas d'effet sur la grille
+  const gammeImposeeParStyle = !!STYLE_PROGRESSIONS[state.style]?.degresFixes;
 
   if (!registered) {
     return (
@@ -115,7 +119,12 @@ function App() {
 
             <label>
               Gamme
-              <select value={state.gamme} onChange={(e) => updateState('gamme', e.target.value)}>
+              <select
+                value={state.gamme}
+                onChange={(e) => updateState('gamme', e.target.value)}
+                disabled={gammeImposeeParStyle}
+                title={gammeImposeeParStyle ? `La progression ${state.style} impose ses propres degrés` : undefined}
+              >
                 <option value="Majeur">Majeur</option>
                 <option value="mineur naturelle">mineur naturelle</option>
                 <option value="mineur harmonique">mineur harmonique</option>
@@ -130,19 +139,23 @@ function App() {
               Style
               <select value={state.style} onChange={(e) => updateState('style', e.target.value)}>
                 <option value="Balade">Balade</option>
+                <option value="Balade Pop">Balade Pop</option>
                 <option value="Blues">Blues</option>
                 <option value="Electro">Electro</option>
                 <option value="Funk">Funk</option>
                 <option value="Grunge">Grunge</option>
                 <option value="Jazz">Jazz</option>
                 <option value="Hip-Hop">Hip-Hop</option>
+                <option value="Médiéval">Médiéval</option>
                 <option value="melancolique">Mélancolique</option>
                 <option value="Metal">Metal</option>
+                <option value="New Varietoche">New Variétoche</option>
                 <option value="Pop">Pop</option>
                 <option value="Rap">Rap</option>
                 <option value="Reggae">Reggae</option>
                 <option value="Rock">Rock</option>
                 <option value="Soul/R&B">Soul/R&B</option>
+                <option value="Swing Manouche">Swing Manouche</option>
                 <option value="Valse">Valse</option>
               </select>
             </label>

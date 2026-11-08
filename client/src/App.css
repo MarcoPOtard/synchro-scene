@@ -545,6 +545,11 @@ sub-acc-alt */
 .progression-liste {
   padding: 4px 8px;
 }
+.progression-info {
+  margin-bottom: 6px;
+  text-align: center;
+  font-weight: bold;
+}
 
 /* Section des musiciens */
 .musicians-section {
