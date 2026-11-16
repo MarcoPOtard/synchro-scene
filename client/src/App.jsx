@@ -11,6 +11,7 @@ import StyleProgression from './components/StyleProgression';
 import MusiciansList from './components/MusiciansList';
 import Chat from './components/Chat';
 import { STYLE_PROGRESSIONS } from './data/styleProgressions';
+import { isDiatonic } from './utils/musicTheory';
 
 function App() {
   const {
@@ -38,6 +39,9 @@ function App() {
 
   // Certains styles imposent leurs propres degrés : la gamme n'a alors pas d'effet sur la grille
   const gammeImposeeParStyle = !!STYLE_PROGRESSIONS[state.style]?.degresFixes;
+
+  // La pentatonique n'est proposée que pour les gammes majeure et mineures
+  const pentatoniqueDisponible = isDiatonic(state.gamme);
 
   if (!registered) {
     return (
@@ -161,6 +165,18 @@ function App() {
             </label>
           </div>
 
+          <div className="control-group pentatonic-toggle">
+            <label>
+              <input
+                type="checkbox"
+                checked={!!state.pentatonique}
+                onChange={(e) => updateState('pentatonique', e.target.checked)}
+                disabled={!pentatoniqueDisponible}
+              />
+              Pentatonique
+            </label>
+          </div>
+
           <div className="control-group full-width">
             <label>
               Notes / Instructions
@@ -180,7 +196,7 @@ function App() {
             return (
               <div className="display-change">
                 <ScaleChords           style={{ order: order.acc }} tonalite={state.tonalite} gamme={state.gamme} />
-                <KeySignature          style={{ order: order.alt }} tonalite={state.tonalite} gamme={state.gamme} />
+                <KeySignature          style={{ order: order.alt }} tonalite={state.tonalite} gamme={state.gamme} pentatonique={!!state.pentatonique} />
                 <CommonToneSubstitutions style={{ order: order.sub }} tonalite={state.tonalite} gamme={state.gamme} />
                 <StyleProgression      style={{ order: order.gri }} musicStyle={state.style} tonalite={state.tonalite} gamme={state.gamme} />
               </div>

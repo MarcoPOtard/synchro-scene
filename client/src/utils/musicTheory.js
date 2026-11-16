@@ -8,6 +8,7 @@ import {
   KEY_SIGNATURES,
   SCALE_NAMING_REFERENCE,
   COMPUTED_CHORD_QUALITIES,
+  PENTATONIC_INTERVALS,
 } from '../constants/musicTheory';
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
@@ -105,6 +106,16 @@ export const getScaleNotes = (tonalite, gamme) => {
   if (rootIndex === -1) return [];
 
   const intervals = SCALE_INTERVALS[gamme] || SCALE_INTERVALS['Majeur'];
+  return intervals.map(interval => (rootIndex + interval) % 12);
+};
+
+// Pentatonique majeure ou mineure selon la gamme (gammes diatoniques uniquement).
+// Les trois variantes mineures donnent la pentatonique mineure.
+export const getPentatonicNotes = (tonalite, gamme) => {
+  const rootIndex = NOTES.indexOf(tonalite);
+  if (rootIndex === -1 || !isDiatonic(gamme)) return [];
+
+  const intervals = PENTATONIC_INTERVALS[gamme.startsWith('mineur') ? 'mineur' : 'Majeur'];
   return intervals.map(interval => (rootIndex + interval) % 12);
 };
 

@@ -17,6 +17,12 @@ export const SCALE_INTERVALS = {
   'Orientale':           [0, 1, 4, 5, 7, 8, 11],     // ½ 1½ ½ T ½ 1½ ½
 };
 
+// Pentatoniques associées aux gammes diatoniques (en demi-tons depuis la tonique)
+export const PENTATONIC_INTERVALS = {
+  'Majeur': [0, 2, 4, 7, 9],   // 1 2 3 5 6
+  'mineur': [0, 3, 5, 7, 10],  // 1 b3 4 5 b7
+};
+
 // Gammes non diatoniques : pas d'armure propre. On emprunte celle d'une gamme de
 // référence uniquement pour choisir entre dièses et bémols dans le nom des notes.
 export const SCALE_NAMING_REFERENCE = {

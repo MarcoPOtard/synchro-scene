@@ -1,7 +1,7 @@
 import React from 'react';
-import { getKeySignature, getNoteArrays, getScaleNotes, isDiatonic } from '../utils/musicTheory';
+import { getKeySignature, getNoteArrays, getPentatonicNotes, getScaleNotes, isDiatonic } from '../utils/musicTheory';
 
-const KeySignature = ({ tonalite, gamme, style }) => {
+const KeySignature = ({ tonalite, gamme, pentatonique, style }) => {
   // Gammes non diatoniques : pas d'armure, on affiche directement les notes de la gamme
   if (!isDiatonic(gamme)) {
     const { notesFr } = getNoteArrays(tonalite, gamme);
@@ -19,6 +19,8 @@ const KeySignature = ({ tonalite, gamme, style }) => {
 
   const sig = getKeySignature(tonalite, gamme);
   const symbol = sig.type === '#' ? '♯' : '♭';
+  const { notesFr } = getNoteArrays(tonalite, gamme);
+  const typePentatonique = gamme.startsWith('mineur') ? 'mineure' : 'majeure';
 
   return (
     <div className="key-signature" style={style}>
@@ -34,6 +36,16 @@ const KeySignature = ({ tonalite, gamme, style }) => {
           <div className="alteration-notes">
             {sig.notes.map((note, i) => (
               <span key={i} className="alteration-note">{note}{symbol}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      {pentatonique && (
+        <div className="pentatonic">
+          <h4>Pentatonique {typePentatonique}</h4>
+          <div className="alteration-notes">
+            {getPentatonicNotes(tonalite, gamme).map((noteIndex, i) => (
+              <span key={i} className="alteration-note">{notesFr[noteIndex]}</span>
             ))}
           </div>
         </div>

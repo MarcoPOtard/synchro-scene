@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   style: 'Pop',
   tonalite: 'C',
   gamme: 'Majeur',
+  pentatonique: false,
   notes: '',
   lastUpdate: null,
   updatedBy: null,
